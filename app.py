@@ -1,17 +1,17 @@
 from flask import Flask, render_template, request, jsonify
 import os
-import glob
 import pandas as pd
 import math
+import requests
 
 app = Flask(__name__)
 
 # Load the toilet facility dataset
 # Assumes the CSV has columns: 'name', 'latitude', 'longitude'
 # Load all CSV files from ./data/ and concatenate into a single DataFrame
-data_files = glob.glob(os.path.join('./data', '*.csv'))
-dfs = [pd.read_csv(file) for file in data_files]
-toilet_df = pd.concat(dfs, ignore_index=True)
+
+toilet_df = pd.read_csv('data/all_toilets.csv')
+
 
 def haversine(lat1, lon1, lat2, lon2):
     """
