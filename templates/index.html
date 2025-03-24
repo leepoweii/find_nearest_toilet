@@ -75,26 +75,19 @@
 
     // Requests the navigation URL from the backend and opens it in a new tab.
     function startNavigation(userLat, userLon, toiletLat, toiletLon) {
-      fetch('/start_navigation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          latitude: userLat,
-          longitude: userLon,
-          toilet_lat: toiletLat,
-          toilet_lon: toiletLon
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.maps_url) {
-          window.open(data.maps_url, '_blank');
-        } else {
-          alert("Navigation URL could not be retrieved.");
-        }
-      })
-      .catch(error => console.error('Error:', error));
+    // Detect if running on iOS or Android
+    var isIOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+    if (isIOS) {
+      // Use Apple Maps URI scheme for iOS
+      window.location.href = "maps://?saddr=" + userLat + "," + userLon +
+                              "&daddr=" + toiletLat + "," + toiletLon +
+                              "&dirflg=w";
+    } else {
+      // For Android, use the geo URI scheme
+      window.location.href = "geo:" + userLat + "," + userLon + 
+                              "?q=" + toiletLat + "," + toiletLon;
     }
+  }
   </script>
 </body>
 </html>
