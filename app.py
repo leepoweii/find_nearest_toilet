@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, jsonify
+import os
+import glob
 import pandas as pd
 import math
 
@@ -6,10 +8,10 @@ app = Flask(__name__)
 
 # Load the toilet facility dataset
 # Assumes the CSV has columns: 'name', 'latitude', 'longitude'
-kinmen_toilet_df = pd.read_csv('./data/kinmen_toilet.csv')
-taipei_toilet_df = pd.read_csv('./data/taipei_toilet.csv')
-taoyuan_toilet_df = pd.read_csv('./data/taoyuan_toilet.csv')
-toilet_df = pd.concat([kinmen_toilet_df, taipei_toilet_df, taoyuan_toilet_df], ignore_index=True)
+# Load all CSV files from ./data/ and concatenate into a single DataFrame
+data_files = glob.glob(os.path.join('./data', '*.csv'))
+dfs = [pd.read_csv(file) for file in data_files]
+toilet_df = pd.concat(dfs, ignore_index=True)
 
 def haversine(lat1, lon1, lat2, lon2):
     """
