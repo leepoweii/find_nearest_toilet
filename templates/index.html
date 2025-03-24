@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Nearest Toilet Finder</title>
+</head>
+<body>
+  <h1>Nearest Toilet Finder</h1>
+  <button onclick="findNearestToilet()">Find Nearest Toilet</button>
+  <div id="result"></div>
+  
+  <script>
+    // Retrieves the user's current geolocation and calls the backend endpoint.
+    function findNearestToilet() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          
+          fetch('/get_nearest_toilet', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({latitude: latitude, longitude: longitude})
+          })
+          .then(response => response.json())
+          .then(data => {
+            if(data.error) {
+              document.getElementById('result').innerText = data.error;
+            } else {
+              const toilet = data.nearest_toilet;
+              const distance = data.distance_km.toFixed(2);
+              document.getElementById('result').innerHTML = 
+                `<p>Nearest Toilet: ${toilet.name} (Distance: ${distance} km)</p>
+                 <button onclick="startNavigation(${latitude}, ${longitude}, ${toilet.latitude}, ${toilet.longitude})">Start 導覽</button>`;
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        });
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+    
+    // Requests the navigation URL from the backend and opens it in a new tab.
+    function startNavigation(userLat, userLon, toiletLat, toiletLon) {
+      fetch('/start_導覽', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          latitude: userLat, 
+          longitude: userLon, 
+          toilet_lat: toiletLat, 
+          toilet_lon: toiletLon
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.maps_url) {
+          window.open(data.maps_url, '_blank');
+        } else {
+          alert("Navigation URL could not be retrieved.");
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+  </script>
+</body>
+</html>
