@@ -6,7 +6,9 @@ app = Flask(__name__)
 
 # Load the toilet facility dataset
 # Assumes the CSV has columns: 'name', 'latitude', 'longitude'
-toilet_df = pd.read_csv('fac_p_12.csv')
+toilet_df1 = pd.read_csv('kinmen_toilet.csv')
+toilet_df2 = pd.read_csv('taipei_toilet.csv')
+toilet_df = pd.concat([toilet_df1, toilet_df2], ignore_index=True)
 
 def haversine(lat1, lon1, lat2, lon2):
     """
@@ -80,5 +82,5 @@ def start_navigation():
 
 
 if __name__ == '__main__':
-    #app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
+    #app.run(debug=True)
