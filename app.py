@@ -58,13 +58,8 @@ def get_nearest_toilet():
         'distance_km': min_distance
     })
 
-@app.route('/start_navigate', methods=['POST'])
-def start_navigate():
-    """
-    Expects a JSON payload with user's current location ('latitude', 'longitude')
-    and the target toilet's location ('toilet_lat', 'toilet_lon').
-    Returns a Google Maps navigation URL.
-    """
+@app.route('/start_navigation', methods=['POST'])
+def start_navigation():
     data = request.get_json()
     user_lat = data.get('latitude')
     user_lon = data.get('longitude')
@@ -74,7 +69,6 @@ def start_navigate():
     if not all([user_lat, user_lon, toilet_lat, toilet_lon]):
         return jsonify({'error': 'Missing navigation data'}), 400
 
-    # Construct Google Maps URL for walking directions
     maps_url = (
         f"https://www.google.com/maps/dir/?api=1"
         f"&origin={user_lat},{user_lon}"
@@ -84,5 +78,7 @@ def start_navigate():
     
     return jsonify({'maps_url': maps_url})
 
+
 if __name__ == '__main__':
+    #app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
     app.run(debug=True)
