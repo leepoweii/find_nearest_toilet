@@ -63,25 +63,25 @@ def get_nearest_toilet():
         'distance_km': min_distance
     })
 
-@app.route('/start_navigation', methods=['POST'])
-def start_navigation():
-    data = request.get_json()
-    user_lat = data.get('latitude')
-    user_lon = data.get('longitude')
-    toilet_lat = data.get('toilet_lat')
-    toilet_lon = data.get('toilet_lon')
-    
-    if not all([user_lat, user_lon, toilet_lat, toilet_lon]):
-        return jsonify({'error': 'Missing navigation data'}), 400
-
-    maps_url = (
-        f"https://www.google.com/maps/dir/?api=1"
-        f"&origin={user_lat},{user_lon}"
-        f"&destination={toilet_lat},{toilet_lon}"
-        f"&travelmode=walking"
-    )
-    
-    return jsonify({'maps_url': maps_url})
+#@app.route('/start_navigation', methods=['POST'])
+#def start_navigation():
+#    data = request.get_json()
+#    user_lat = data.get('latitude')
+#    user_lon = data.get('longitude')
+#    toilet_lat = data.get('toilet_lat')
+#    toilet_lon = data.get('toilet_lon')
+#    
+#    if not all([user_lat, user_lon, toilet_lat, toilet_lon]):
+#        return jsonify({'error': 'Missing navigation data'}), 400
+#
+#    maps_url = (
+#        f"https://www.google.com/maps/dir/?api=1"
+#        f"&origin={user_lat},{user_lon}"
+#        f"&destination={toilet_lat},{toilet_lon}"
+#        f"&travelmode=walking"
+#    )
+#    
+#    return jsonify({'maps_url': maps_url})
 
 
 if __name__ == '__main__':
