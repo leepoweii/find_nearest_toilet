@@ -6,9 +6,10 @@ app = Flask(__name__)
 
 # Load the toilet facility dataset
 # Assumes the CSV has columns: 'name', 'latitude', 'longitude'
-toilet_df1 = pd.read_csv('kinmen_toilet.csv')
-toilet_df2 = pd.read_csv('taipei_toilet.csv')
-toilet_df = pd.concat([toilet_df1, toilet_df2], ignore_index=True)
+kinmen_toilet_df = pd.read_csv('./data/kinmen_toilet.csv')
+taipei_toilet_df = pd.read_csv('./data/taipei_toilet.csv')
+taoyuan_toilet_df = pd.read_csv('./data/taoyuan_toilet.csv')
+toilet_df = pd.concat([kinmen_toilet_df, taipei_toilet_df, taoyuan_toilet_df], ignore_index=True)
 
 def haversine(lat1, lon1, lat2, lon2):
     """
