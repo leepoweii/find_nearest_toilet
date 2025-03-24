@@ -73,18 +73,21 @@
       }
     }
 
-    // Opens the native maps app based on device platform.
+    // Requests the navigation URL from the backend and opens it in a new tab.
     function startNavigation(userLat, userLon, toiletLat, toiletLon) {
-      var isIOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-      if (isIOS) {
-        // Launch Apple Maps
-        window.location.href = "maps://?saddr=" + userLat + "," + userLon +
-                                "&daddr=" + toiletLat + "," + toiletLon + "&dirflg=w";
-      } else {
-        // Launch default maps app on Android or others
-        window.location.href = "geo:" + userLat + "," + userLon + "?q=" + toiletLat + "," + toiletLon;
-      }
+    // Detect if running on iOS
+    var isIOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+    if (isIOS) {
+      // Use Apple Maps URI scheme
+      window.location.href = "maps://?saddr=" + userLat + "," + userLon +
+                              "&daddr=" + toiletLat + "," + toiletLon +
+                              "&dirflg=w";
+    } else {
+      // Use geo URI for Android and others
+      window.location.href = "geo:" + userLat + "," + userLon +
+                              "?q=" + toiletLat + "," + toiletLon;
     }
+  }
   </script>
 </body>
 </html>
