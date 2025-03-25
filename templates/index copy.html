@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html data-theme="customtheme">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>尋找最近的公廁</title>
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-base-200 flex flex-col items-center justify-center p-4">
+  <!-- your existing content -->
+  <div class="card shadow-xl p-6 bg-base-100 w-full max-w-md flex flex-col items-center">
+    <h1 class="text-4xl font-bold text-center mb-6">我想上廁所</h1>
+    <div class="flex justify-center w-full mb-6">
+      <button 
+        onclick="findNearestToilet()" 
+        class="btn btn-primary btn-lg w-full hover:scale-105 transition transform duration-200 text-lg">
+        看看附近哪裡有公廁
+      </button>
+    </div>
+    <div id="result" class="text-center text-xl w-full"></div>
+  </div>
+
+  <script>
+    // Register the service worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}")
+          .then(registration => {
+            console.log("Service Worker registered with scope:", registration.scope);
+          })
+          .catch(error => {
+            console.log("Service Worker registration failed:", error);
+          });
+      });
+    }
+
+    // Retrieves user's geolocation and calls the backend to get the nearest toilet.
+    function findNearestToilet() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const { latitude, longitude } = position.coords;
+          fetch('/get_nearest_toilet', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ latitude, longitude })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              document.getElementById('result').innerText = data.error;
+            } else {
+              const toilet = data.nearest_toilet;
+              const distance = data.distance_km.toFixed(2);
+              document.getElementById('result').innerHTML = `
+                <p class="mb-4">
+                  離你最近的公廁是:
+                  <strong>${toilet.name}</strong>
+                  (距離: ${distance} 公里)
+                </p>
+                <button 
+                  onclick="startNavigation(${latitude}, ${longitude}, ${toilet.latitude}, ${toilet.longitude})" 
+                  class="btn btn-secondary btn-lg w-full hover:scale-105 transition transform duration-200 text-lg">
+                  快帶我去！
+                </button>
+              `;
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+
+    // Requests the navigation URL from the backend and opens it in a new tab.
+    function startNavigation(userLat, userLon, toiletLat, toiletLon) {
+    // Detect if running on iOS
+    var isIOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+    if (isIOS) {
+      // Use Apple Maps URI scheme
+      window.location.href = "maps://?saddr=" + userLat + "," + userLon +
+                              "&daddr=" + toiletLat + "," + toiletLon +
+                              "&dirflg=w";
+    } else {
+      // Use geo URI for Android and others
+      window.location.href = "geo:" + userLat + "," + userLon +
+                              "?q=" + toiletLat + "," + toiletLon;
+    }
+  }
+  </script>
+</body>
+</html>
