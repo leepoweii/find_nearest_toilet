@@ -10,7 +10,7 @@
 
 一直以來，我都只把 Python 這門程式語言用在一些「幕後作業」，例如做數據分析、統計運算，或是開發個人用的小工具。這些成果雖然帶來成就感，卻往往只呈現在指令列或圖表中，讓朋友看了也不知道該怎麼操作。
 
-這次在瀏覽政府的開放資料時，發現了一份「全國公廁建檔」的清單，裡頭詳細列出了全台灣各地的公廁資訊。對於平常待在金門的我來說，在台北要找廁所並不是那麼方便，於是腦中閃過一個念頭：「如果能一鍵帶我去廁所，應該很實用吧？」
+這在瀏覽政府的開放資料時，發現了一份「全國公廁建檔」的清單，裡頭詳細列出了全台灣各地的公廁資訊。對於平常待在金門的我來說，在台北要找廁所並不是那麼方便，於是腦中閃過一個念頭：「如果能一鍵帶我去廁所，應該很實用吧？」
 
 正好最近很紅各種 Vibe Coding，於是我決定和「GPT 好夥伴」一起來場小實驗，經過幾回合的切磋，很快就製作出了這個「附近公廁尋找器」的網站雛形。
 
@@ -51,7 +51,7 @@
 
 1. **複製專案**
 ```bash
-git clone https://github.com/your-username/find_nearest_toilet.git
+git clone https://github.com/leepoweii/find_nearest_toilet
 cd find_nearest_toilet
 ```
 
@@ -96,7 +96,7 @@ find_nearest_toilet/
 │   └── service-worker.js  # Service Worker
 ├── tailwind.config.js     # Tailwind CSS 配置
 ├── package.json           # Node.js 依賴（前端工具）
-└── Procfile              # Heroku 部署配置
+└── zbpack.json           # Zeabur 部署配置
 ```
 
 ## 🔧 使用方法
@@ -124,28 +124,6 @@ def haversine_vectorized(lat1, lon1, lat2, lon2):
 - 桌面版：清晰的卡片佈局
 - 平板：適中的間距設計
 - 手機：單欄優化顯示
-
-## 📈 未來計畫
-
-- [ ] 新增篩選功能（無障礙設施、24小時開放等）
-- [ ] 實作路線規劃功能
-- [ ] 加入使用者評分系統
-- [ ] 整合更多開放資料（停車場、便利商店等）
-- [ ] 開發 PWA 離線功能
-
-## 🤝 貢獻指南
-
-歡迎提交 Issue 和 Pull Request！
-
-1. Fork 本專案
-2. 建立功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 開啟 Pull Request
-
-## 📄 授權條款
-
-本專案採用 MIT 授權條款 - 詳見 [LICENSE](LICENSE) 檔案
 
 ## 🙏 致謝
 
